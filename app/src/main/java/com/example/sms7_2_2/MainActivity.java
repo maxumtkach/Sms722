@@ -30,13 +30,7 @@ public class MainActivity extends AppCompatActivity {
         Button mDialButton = (Button) findViewById(R.id.btn_dial);
         final EditText mPhoneNoEt = (EditText) findViewById(R.id.et_phone_no);
 
-        mDialButton.setEnabled(false);
-        if (checkPermission(Manifest.permission.CALL_PHONE)) {
-            mDialButton.setEnabled(true);
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE},
-                    MY_PERMISSIONS_REQUEST_CALL_PHONE);
-        }
+        mDialButton.setEnabled(true);
 
         mDialButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +43,15 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dial)));
                     }
                 } else {
-                    Toast.makeText(MainActivity.this, "Enter a phone number", Toast.LENGTH_SHORT).show();
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE},
+                            MY_PERMISSIONS_REQUEST_CALL_PHONE);
+                    if (checkPermission(Manifest.permission.CALL_PHONE)) {
+
+                        String dial = "tel:" + phoneNo;
+                        startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dial)));
+                    } else {
+                        Toast.makeText(MainActivity.this, "Enter a phone number", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -57,13 +59,7 @@ public class MainActivity extends AppCompatActivity {
         mSendMessageBtn = (Button) findViewById(R.id.btn_send_message);
         final EditText messagetEt = (EditText) findViewById(R.id.et_message);
 
-        mSendMessageBtn.setEnabled(false);
-        if (checkPermission(Manifest.permission.SEND_SMS)) {
-            mSendMessageBtn.setEnabled(true);
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS},
-                    SEND_SMS_PERMISSION_REQUEST_CODE);
-        }
+        mSendMessageBtn.setEnabled(true);
 
         mSendMessageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +72,14 @@ public class MainActivity extends AppCompatActivity {
                         SmsManager smsManager = SmsManager.getDefault();
                         smsManager.sendTextMessage(phoneNo, null, message, null, null);
                     } else {
-                        Toast.makeText(MainActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS},
+                                SEND_SMS_PERMISSION_REQUEST_CODE);
+                        if (checkPermission(Manifest.permission.SEND_SMS)) {
+                            SmsManager smsManager = SmsManager.getDefault();
+                            smsManager.sendTextMessage(phoneNo, null, message, null, null);
+                        } else {
+                            Toast.makeText(MainActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             }
