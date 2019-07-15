@@ -22,65 +22,80 @@ public class MainActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 11;
     final int SEND_SMS_PERMISSION_REQUEST_CODE = 111;
     private Button mSendMessageBtn;
+    private Button mDialButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button mDialButton = (Button) findViewById(R.id.btn_dial);
+        initView();
+        // mDialButton = (Button) findViewById(R.id.btn_dial);
         final EditText mPhoneNoEt = (EditText) findViewById(R.id.et_phone_no);
+        final EditText messagetEt = (EditText) findViewById(R.id.et_message);
 
-        mDialButton.setEnabled(true);
+        mDialButton.setEnabled(true);  //кнопка активна
 
         mDialButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {         //call
                 String phoneNo = mPhoneNoEt.getText().toString();
                 if (!TextUtils.isEmpty(phoneNo)) {
-                    if (checkPermission(Manifest.permission.CALL_PHONE)) {
+                    if (checkPermission(Manifest.permission.CALL_PHONE)) {  //  разрешение получено
 
-                        String dial = "tel:" + phoneNo;
+                        String dial = "tel:" + phoneNo; //совершаем звонок
                         startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dial)));
-                    }
-                } else {
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE},
-                            MY_PERMISSIONS_REQUEST_CALL_PHONE);
-                    if (checkPermission(Manifest.permission.CALL_PHONE)) {
+                        Toast.makeText(MainActivity.this, "call-call", Toast.LENGTH_SHORT).show();
 
-                        String dial = "tel:" + phoneNo;
-                        startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dial)));
                     } else {
-                        Toast.makeText(MainActivity.this, "Enter a phone number", Toast.LENGTH_SHORT).show();
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE},
+                                MY_PERMISSIONS_REQUEST_CALL_PHONE);    //получаем разрешение
+                        if (checkPermission(Manifest.permission.CALL_PHONE)) {
+
+                            String dial = "tel:" + phoneNo;    //звоним
+                            startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dial)));
+                        } else {
+                            Toast.makeText(MainActivity.this, "permission not received error", Toast.LENGTH_SHORT).show();
+                        }
                     }
+
+                } else {
+                    Toast.makeText(MainActivity.this, "Enter a phone number", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        mSendMessageBtn = (Button) findViewById(R.id.btn_send_message);
-        final EditText messagetEt = (EditText) findViewById(R.id.et_message);
+        // mSendMessageBtn = (Button) findViewById(R.id.btn_send_message);
 
-        mSendMessageBtn.setEnabled(true);
+        mSendMessageBtn.setEnabled(true);  // кнопка активна
 
         mSendMessageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {    //sms
                 String message = messagetEt.getText().toString();
                 String phoneNo = mPhoneNoEt.getText().toString();
                 if (!TextUtils.isEmpty(message) && !TextUtils.isEmpty(phoneNo)) {
 
-                    if (checkPermission(Manifest.permission.SEND_SMS)) {
-                        SmsManager smsManager = SmsManager.getDefault();
+                    if (checkPermission(Manifest.permission.SEND_SMS)) {    //разрешение получено
+
+                        SmsManager smsManager = SmsManager.getDefault();      //отправка смс
                         smsManager.sendTextMessage(phoneNo, null, message, null, null);
+                        Toast.makeText(MainActivity.this, "sms sent to", Toast.LENGTH_SHORT).show();
+
                     } else {
                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS},
-                                SEND_SMS_PERMISSION_REQUEST_CODE);
+                                SEND_SMS_PERMISSION_REQUEST_CODE);  //получаем разрешение
                         if (checkPermission(Manifest.permission.SEND_SMS)) {
-                            SmsManager smsManager = SmsManager.getDefault();
+
+                            SmsManager smsManager = SmsManager.getDefault();   //отправка смс
                             smsManager.sendTextMessage(phoneNo, null, message, null, null);
+
                         } else {
-                            Toast.makeText(MainActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "permission not received error", Toast.LENGTH_SHORT).show();  //нет разреш
                         }
                     }
+                } else {
+                    Toast.makeText(MainActivity.this, "Enter a phone number end enter a sms", Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
@@ -108,5 +123,10 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
         }
+    }
+
+    public void initView() {
+        mSendMessageBtn = (Button) findViewById(R.id.btn_send_message);
+        mDialButton = (Button) findViewById(R.id.btn_dial);
     }
 }
