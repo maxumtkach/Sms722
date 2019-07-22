@@ -22,14 +22,13 @@ public class MainActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 11;
     final int SEND_SMS_PERMISSION_REQUEST_CODE = 111;
     private Button mSendMessageBtn;
-    private Button mDialButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //   initView();
-        mDialButton = (Button) findViewById(R.id.btn_dial);
+        Button mDialButton = (Button) findViewById(R.id.btn_dial);
         mSendMessageBtn = (Button) findViewById(R.id.btn_send_message);
         final EditText mPhoneNoEt = (EditText) findViewById(R.id.et_phone_no);
         final EditText messagetEt = (EditText) findViewById(R.id.et_message);
@@ -115,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
             case SEND_SMS_PERMISSION_REQUEST_CODE: {
                 if (grantResults.length > 0 && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     mSendMessageBtn.setEnabled(true);
+                } else {
+                    finish();
                 }
                 return;
             }
@@ -122,8 +123,9 @@ public class MainActivity extends AppCompatActivity {
             case MY_PERMISSIONS_REQUEST_CALL_PHONE: {
                 if (grantResults.length > 0 && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     mSendMessageBtn.setEnabled(true);
+                } else {
+                    finish();
                 }
-                return;
             }
         }
     }
