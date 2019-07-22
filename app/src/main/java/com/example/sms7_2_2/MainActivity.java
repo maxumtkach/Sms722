@@ -28,8 +28,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initView();
-        // mDialButton = (Button) findViewById(R.id.btn_dial);
+        //   initView();
+        mDialButton = (Button) findViewById(R.id.btn_dial);
+        mSendMessageBtn = (Button) findViewById(R.id.btn_send_message);
         final EditText mPhoneNoEt = (EditText) findViewById(R.id.et_phone_no);
         final EditText messagetEt = (EditText) findViewById(R.id.et_message);
 
@@ -64,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // mSendMessageBtn = (Button) findViewById(R.id.btn_send_message);
-
         mSendMessageBtn.setEnabled(true);  // кнопка активна
 
         mSendMessageBtn.setOnClickListener(new View.OnClickListener() {
@@ -73,14 +72,18 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {    //sms
                 String message = messagetEt.getText().toString();
                 String phoneNo = mPhoneNoEt.getText().toString();
-                if (!TextUtils.isEmpty(message) && !TextUtils.isEmpty(phoneNo)) {
+                if (!TextUtils.isEmpty(message) && !TextUtils.isEmpty(phoneNo) && !MainActivity.this.isFinishing()) {
 
                     if (checkPermission(Manifest.permission.SEND_SMS)) {    //разрешение получено
-
-                        SmsManager smsManager = SmsManager.getDefault();      //отправка смс
-                        smsManager.sendTextMessage(phoneNo, null, message, null, null);
-                        Toast.makeText(MainActivity.this, "sms sent to", Toast.LENGTH_SHORT).show();
-
+                        try {
+                            SmsManager smsManager = SmsManager.getDefault();      //отправка смс
+                            smsManager.sendTextMessage(phoneNo, null, message, null, null);
+                            Toast.makeText(MainActivity.this, "sms sent to", Toast.LENGTH_SHORT).show();
+                        } catch (Exception ex) {
+                            Toast.makeText(getApplicationContext(), ex.getMessage().toString(),
+                                    Toast.LENGTH_LONG).show();
+                            ex.printStackTrace();
+                        }
                     } else {
                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS},
                                 SEND_SMS_PERMISSION_REQUEST_CODE);  //получаем разрешение
@@ -123,10 +126,5 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
         }
-    }
-
-    public void initView() {
-        mSendMessageBtn = (Button) findViewById(R.id.btn_send_message);
-        mDialButton = (Button) findViewById(R.id.btn_dial);
     }
 }
