@@ -115,17 +115,20 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0 && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     mSendMessageBtn.setEnabled(true);
                 } else {
-                    finish();
+                    Toast.makeText(MainActivity.this, " you do not have permission", Toast.LENGTH_SHORT).show();
+
                 }
-                return;
+                break;
             }
 
             case MY_PERMISSIONS_REQUEST_CALL_PHONE: {
                 if (grantResults.length > 0 && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     mSendMessageBtn.setEnabled(true);
                 } else {
-                    finish();
+                    Toast.makeText(MainActivity.this, " you do not have permission", Toast.LENGTH_SHORT).show();
+
                 }
+                break;
             }
         }
     }
