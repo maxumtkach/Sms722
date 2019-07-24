@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Sms 7-2-2</string>
     <string name="enter_message">Enter message</string>
-    <string name="send_messange">Send Messange</string>
+    <string name="send_message">Send Message</string>
     <string name="enter_phone_number">Enter Phone number</string>
     <string name="dial">Dial</string>
 </resources>

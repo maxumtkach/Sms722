@@ -20,6 +20,7 @@
 
     <Button
         android:id="@+id/btn_dial"
+        android:onClick="onClickDial"
         android:text="@string/dial"
         android:layout_width="150dp"
         android:layout_height="80dp"
@@ -44,7 +45,8 @@
 
     <Button
         android:id="@+id/btn_send_message"
-        android:text="@string/send_messange"
+        android:onClick="onClickSendMessage"
+        android:text="@string/send_message"
         android:background="@android:color/holo_green_dark"
         android:layout_width="150dp"
         android:layout_height="80dp"
